@@ -1,24 +1,24 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout Code') {
+        stage('Get Commit and Repo URL') {
             steps {
-                // Realiza el checkout del código desde GitHub
-                checkout scm
-            }
-        }
-        stage('Get Commit Message') {
-            steps {
-                // Usa el comando git para obtener el mensaje del último commit en Windows
+                // Obtiene la URL del repositorio y el último mensaje del commit
                 script {
-                    def output = bat(
-                        script: "git log -1 --pretty=%B",
+                    // Obtener la URL del repositorio
+                    def repoUrl = bat(
+                        script: 'git config --get remote.origin.url',
                         returnStdout: true
                     ).trim()
  
-                    // Elimina las líneas innecesarias que incluye `bat`
-                    def commitMessage = output.split("\r?\n").drop(1).join("\n").trim()
+                    // Obtener el mensaje del último commit
+                    def commitMessage = bat(
+                        script: 'git log -1 --pretty=%B',
+                        returnStdout: true
+                    ).trim()
  
+                    // Imprimir la URL del repositorio y el mensaje del commit
+                    echo "Repositorio URL: ${repoUrl}"
                     echo "Último mensaje de commit: ${commitMessage}"
                 }
             }
