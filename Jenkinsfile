@@ -127,7 +127,7 @@ pipeline {
                         }
                     }
                     PACKAGE_NAME = powershell( script: "Get-ChildItem -Path ${OUTPUT_PATH} -Filter '*.nupkg' | Select-Object -ExpandProperty Name", returnStdout: true ).trim()
-                    echo ${PACKAGE_NAME}
+                    echo "nombre ${PACKAGE_NAME}"
             }
         }
     }
