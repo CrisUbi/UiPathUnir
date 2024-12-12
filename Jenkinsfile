@@ -110,23 +110,30 @@ pipeline {
                     def maxAttempts = 10  // Número máximo de intentos
                     def attempt = 0
                     def waitTime = 10  // Tiempo de espera entre intentos en segundos
- 
+
                     while (!fileExists && attempt < maxAttempts) {
-                        def files = findFiles(glob: "${directoryPath}/*.nupkg")
- 
-                        if (files.length > 0) {
+                        def files = powershell(
+                            script: "Get-ChildItem -Path '${directoryPath}' -Filter '*.nupkg'",
+                            returnStdout: true
+                        ).trim()
+
+                        if (files) {
                             fileExists = true
-                            echo "Archivo .nupkg encontrado: ${files[0].path}"
+                            echo "Archivo .nupkg encontrado: ${files}"
                         } else {
                             attempt++
                             echo "Intento ${attempt}: Esperando ${waitTime} segundos..."
                             sleep(time: waitTime, unit: 'SECONDS')
                         }
                     }
- 
+
                     if (!fileExists) {
                         error "No se encontró ningún archivo .nupkg después de ${maxAttempts} intentos."
                     }
+        }
+    }
+}
+
                     PACKAGE_NAME = powershell( script: "Get-ChildItem -Path ${OUTPUT_PATH} -Filter '*.nupkg' | Select-Object -ExpandProperty Name", returnStdout: true ).trim()
                     echo ${PACKAGE_NAME}
             }
