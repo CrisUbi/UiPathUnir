@@ -75,6 +75,8 @@ pipeline {
         
                     // Construye la nueva versión
                     def newVersion = "1.0.${commitCount}"
+                    
+                    echo "Nueva versión configurada: ${newVersion}"
         
                     // Escapa correctamente las comillas y las rutas
                     bat """
