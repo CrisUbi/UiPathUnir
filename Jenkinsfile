@@ -1,17 +1,14 @@
 pipeline {
     agent any
     stages {
-        stage('Get Commit Content') {
+        stage('Get Commit Message') {
             steps {
                 script {
-                    // Obtener el contenido del último commit
-                    def commitContent = bat(
-                        script: 'git show -s --format=%%b',
-                        returnStdout: true
-                    ).trim()
-
-                    // Imprimir el contenido del commit
-                    echo "Contenido del último commit: ${commitContent}"
+                    // Ejecutar un comando Git para obtener el mensaje del commit
+                    def commitMessage = sh(script: 'git log -1 --pretty=%%B', returnStdout: true).trim()
+ 
+                    // Imprimir el mensaje del commit
+                    echo "Commit Message: ${commitMessage}"
                 }
             }
         }
