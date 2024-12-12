@@ -12,7 +12,6 @@ pipeline {
         ORCHESTRATOR_URL = "${env.ORCHESTRATOR_URL}"
         ORCHESTRATOR_TENANT = "${env.ORCHESTRATOR_TENANT}"
         UIPCLI_PATH = "${env.UIPCLI_PATH}"
-        OUTPUT_PATH = "${env.OUTPUT_PATH}"
         UI_ORGANIZACION = "${env.UI_ORGANIZACION}"
     }
     
@@ -56,7 +55,7 @@ pipeline {
         
         stage('Empaquetar proyecto UiPath') {
             steps {
-                PROJECT_PATH = "${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json"
+                def PROJECT_PATH = "${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json"
                 bat """
                 "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
                 """
