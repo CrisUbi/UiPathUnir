@@ -64,6 +64,7 @@ pipeline {
             }
         }
 
+
         stage('Version Management') {
             steps {
                 script {
@@ -81,7 +82,7 @@ pipeline {
                     // Escapa correctamente las comillas y las rutas
                     def updateVersionCommand = """
                     \$projectPath = '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json'
-                    (Get-Content \$projectPath) -replace '\\\"projectVersion\\\": \".*\\\",', '\\\"projectVersion\\\": \\\"${newVersion}\\\",' | Set-Content \$projectPath
+                    (Get-Content \$projectPath) -replace '"projectVersion": ".*",', '"projectVersion": "${newVersion}",' | Set-Content \$projectPath
                     """
 
                     // Ejecutar el comando de PowerShell
@@ -94,6 +95,7 @@ pipeline {
                 }
             }
         }
+
 
 
         stage('Empaquetar proyecto UiPath') {
