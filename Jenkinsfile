@@ -62,7 +62,7 @@ pipeline {
                     "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
                     """
                 }
-            ]
+            }
         }
         stage('Print Variables') { 
             steps { 
