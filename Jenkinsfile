@@ -56,11 +56,13 @@ pipeline {
         
         stage('Empaquetar proyecto UiPath') {
             steps {
-                PROJECT_PATH = "${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json"
-                bat """
-                "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
-                """
-            }
+                script {
+                    PROJECT_PATH = "${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json"
+                    bat """
+                    "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
+                    """
+                }
+            ]
         }
         stage('Print Variables') { 
             steps { 
