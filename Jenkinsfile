@@ -4,9 +4,10 @@ pipeline {
         GITHUB_URL = '' 
         COMMIT_MESSAGE = '' 
         BRANCH_NAME = ''
-        FLODER_NAME = ''
+        UI_FOLDER = ''
         PROJECT_NAME = ''
         PROJECT_PATH = ''
+        PACKAGE_NAME = ''
         OUTPUT_PATH = "${env.OUTPUT_PATH}"
         UIPCLI_API = credentials('SECRET_KEY_UIPATH')
         UIPAPP_ID = "${env.UIPAPP_ID}"
@@ -61,9 +62,19 @@ pipeline {
                     bat """
                     "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
                     """
+                    PACKAGE_NAME = powershell( script: "Get-ChildItem -Path ${OUTPUT_PATH} -Filter '*.nupkg' | Select-Object -ExpandProperty Name", returnStdout: true ).trim()
                 }
             }
         }
+
+        stage('Desplegar en Orchestrator') {
+            steps {
+                bat """
+                "${UIPCLI_PATH}" package deploy "${OUTPUT_PATH}\\${PACKAGE_NAME}" "${ORCHESTRATOR_URL}" "${ORCHESTRATOR_TENANT}" --applicationId "${UIPAPP_ID}" --applicationSecret "${UIPCLI_API}" --applicationScope "OR.Assets OR.BackgroundTasks OR.Execution OR.Folders OR.Jobs OR.Machines.Read OR.Monitoring OR.Robots.Read OR.Settings.Read OR.TestSetExecutions OR.TestSets OR.TestSetSchedules OR.Users.Read" -o "${UI_FOLDER}" --accountForApp "${UI_ORGANIZACION}"
+                """
+            }
+        }
+        
         stage('Print Variables') { 
             steps { 
                 echo "Repositorio URL: ${GITHUB_URL}" 
@@ -74,4 +85,20 @@ pipeline {
             } 
         }
     }
+    post {
+
+        success {
+
+            echo '¡Despliegue exitoso!'
+
+        }
+
+        failure {
+
+            echo 'Hubo un error en el despliegue.'
+
+        }
+
+    }
+
 }
