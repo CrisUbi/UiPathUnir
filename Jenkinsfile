@@ -21,7 +21,7 @@ pipeline {
 
             steps {
 
-                git branch: "${BRANCH_NAME}", url: "${GITHUB_URL}"
+                git branch: "%BRANCH_NAME%", url: "%GITHUB_URL%"
 
             }
 
@@ -47,7 +47,7 @@ pipeline {
 
                 bat """
 
-                "%UIPCLI_PATH%" package deploy "%OUTPUT_PATH%\\UnirTes.1.0.0.nupkg" "${ORCHESTRATOR_URL}" "${ORCHESTRATOR_TENANT}" --applicationId "${UIPAPP_ID}" --applicationSecret "${UIPCLI_API}" --applicationScope "OR.Assets OR.BackgroundTasks OR.Execution OR.Folders OR.Jobs OR.Machines.Read OR.Monitoring OR.Robots.Read OR.Settings.Read OR.TestSetExecutions OR.TestSets OR.TestSetSchedules OR.Users.Read" -o "Unir" --accountForApp "testunir"
+                "%UIPCLI_PATH%" package deploy "%OUTPUT_PATH%\\UnirTes.1.0.0.nupkg" "%ORCHESTRATOR_URL%" "%ORCHESTRATOR_TENANT%" --applicationId "%UIPAPP_ID%" --applicationSecret "%UIPCLI_API%" --applicationScope "OR.Assets OR.BackgroundTasks OR.Execution OR.Folders OR.Jobs OR.Machines.Read OR.Monitoring OR.Robots.Read OR.Settings.Read OR.TestSetExecutions OR.TestSets OR.TestSetSchedules OR.Users.Read" -o "Unir" --accountForApp "testunir"
                 """
 
             }
