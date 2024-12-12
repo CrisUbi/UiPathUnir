@@ -8,6 +8,7 @@ pipeline {
         PROJECT_NAME = ''
         PROJECT_PATH = ''
         PACKAGE_NAME = ''
+        PACKAGE_VERSION = ''
         OUTPUT_PATH = "${env.OUTPUT_PATH}"
         UIPCLI_API = credentials('SECRET_KEY_UIPATH')
         UIPAPP_ID = "${env.UIPAPP_ID}"
@@ -63,6 +64,26 @@ pipeline {
             }
         }
         
+        stage('Version Management') {             
+            steps { 
+                 script {                     
+                    // Obtiene el número total de commits                     
+                    def commitCount = bat(                         
+                        script: 'git rev-list --count HEAD',                         
+                        returnStdout: true ).trim()                     
+                        // Construye la nueva versión                     
+                        def newVersion = "1.0.${commitCount}"                     
+                        // Actualiza el archivo project.json con la nueva versión                     
+                        bat """                     
+                        powershell -Command "(Get-Content '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json') -replace '\\"projectVersion\\": \\".*\\"', '\\"projectVersion\\": \\"${newVersion}\\"' | Set-Content '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json'"                     
+                        """                     
+                        echo "Nueva versión configurada: ${newVersion}"                     
+                        // Asigna la nueva versión como variable de entorno para las siguientes etapas                     
+                        PACKAGE_VERSION = newVersion                 
+                }
+            } 
+        }
+
         stage('Empaquetar proyecto UiPath') {
             steps {
                 script {
