@@ -28,6 +28,11 @@ pipeline {
                     // Obtener la rama que contiene el commit 
                     def commitHash = powershell( script: 'git rev-parse HEAD', returnStdout: true ).trim() 
                     BRANCH_NAME = powershell( script: "git branch -r --contains ${commitHash}", returnStdout: true ).trim()
+                    
+                    // Comando de PowerShell para eliminar la carpeta si existe 
+                    def deleteFolderCommand = """ if (Test-Path -Path '${OUTPUT_PATH}') { Remove-Item -Path '${OUTPUT_PATH}' -Recurse -Force } """ 
+                    // Ejecutar el comando de PowerShell 
+                    powershell script: deleteFolderCommand, returnStdout: true }
                 }
             }
         }
