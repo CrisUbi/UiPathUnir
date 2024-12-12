@@ -4,9 +4,9 @@ pipeline {
         stage('Get Commit Message') {
             steps {
                 script {
-                    // Obtener solo el mensaje del último commit sin palabras adicionales
+                    // Obtener solo el mensaje del último commit sin metadatos
                     def commitMessage = bat(
-                        script: 'git log -1 --pretty=%s',
+                        script: 'git log -1 --pretty=%B',
                         returnStdout: true
                     ).trim()
  
