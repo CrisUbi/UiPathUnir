@@ -11,10 +11,14 @@ pipeline {
             steps {
                 // Usa el comando git para obtener el mensaje del último commit en Windows
                 script {
-                    def commitMessage = bat(
-                        script: "git log -1 --pretty=%%B",
+                    def output = bat(
+                        script: "git log -1 --pretty=%B",
                         returnStdout: true
                     ).trim()
+ 
+                    // Elimina las líneas innecesarias que incluye `bat`
+                    def commitMessage = output.split("\r?\n").drop(1).join("\n").trim()
+ 
                     echo "Último mensaje de commit: ${commitMessage}"
                 }
             }
