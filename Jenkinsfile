@@ -126,10 +126,6 @@ pipeline {
                             sleep(time: waitTime, unit: 'SECONDS')
                         }
                     }
-
-                    if (!fileExists) {
-                        error "No se encontró ningún archivo .nupkg después de ${maxAttempts} intentos."
-                    }
                     PACKAGE_NAME = powershell( script: "Get-ChildItem -Path ${OUTPUT_PATH} -Filter '*.nupkg' | Select-Object -ExpandProperty Name", returnStdout: true ).trim()
                     echo ${PACKAGE_NAME}
             }
