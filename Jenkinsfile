@@ -1,26 +1,29 @@
 pipeline {
     agent any
+    environment { REPO_URL = '' 
+                 COMMIT_MESSAGE = '' 
+                 BRANCH_NAME = ''
+                }
     stages {
         stage('Get Commit and Repo URL') {
             steps {
                 script {
                     // Obtener la URL del repositorio
-                    def repoUrl = powershell(
+                    REPO_URL = powershell(
                         script: 'git config --get remote.origin.url',
                         returnStdout: true
                     ).trim()
 
                     // Obtener el mensaje del último commit
-                    def commitMessage = powershell(
+                    COMMIT_MESSAGE = powershell(
                         script: 'git log -1 --pretty=format:"%B"',
                         returnStdout: true
                     ).trim()
 
-                    // Imprimir la URL del repositorio y el mensaje del commit
-                    echo "Repositorio URL: ${repoUrl}"
-                    echo "Último mensaje de commit: ${commitMessage}"
+                    BRANCH_NAME = powershell( script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true ).trim() 
                 }
             }
         }
+    stage('Print Variables') { steps { echo "Repositorio URL: ${REPO_URL}" echo "Último mensaje de commit: ${COMMIT_MESSAGE}" echo "Nombre de la rama actual: ${BRANCH_NAME}" } }
     }
 }
