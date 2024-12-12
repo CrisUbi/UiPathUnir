@@ -23,8 +23,6 @@ pipeline {
                     def commitHash = powershell( script: 'git rev-parse HEAD', returnStdout: true ).trim() 
                     // Obtener la rama que contiene el commit 
                     BRANCH_NAME = powershell( script: "git branch -r --contains ${commitHash}", returnStdout: true ).trim()
-
-                    BRANCH_NAME = powershell( script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true ).trim() 
                 }
             }
         }
