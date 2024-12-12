@@ -7,6 +7,13 @@ pipeline {
         FLODER_NAME = ''
         PROJECT_NAME = ''
         OUTPUT_PATH = "${env.OUTPUT_PATH}"
+        UIPCLI_API = credentials('SECRET_KEY_UIPATH')
+        UIPAPP_ID = "${env.UIPAPP_ID}"
+        ORCHESTRATOR_URL = "${env.ORCHESTRATOR_URL}"
+        ORCHESTRATOR_TENANT = "${env.ORCHESTRATOR_TENANT}"
+        UIPCLI_PATH = "${env.UIPCLI_PATH}"
+        OUTPUT_PATH = "${env.OUTPUT_PATH}"
+        UI_ORGANIZACION = "${env.UI_ORGANIZACION}"
     }
     
     stages {
@@ -44,6 +51,15 @@ pipeline {
                     git clone ${GITHUB_URL} ${OUTPUT_PATH}
                     """
                 }
+            }
+        }
+        
+        stage('Empaquetar proyecto UiPath') {
+            steps {
+                PROJECT_PATH = "${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json"
+                bat """
+                "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
+                """
             }
         }
         stage('Print Variables') { 
