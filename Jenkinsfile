@@ -64,32 +64,37 @@ pipeline {
             }
         }
 
-        stage('Version Management') {            
+        stage('Version Management') {
             steps {
                 script {
-                    // Obtiene el número total de commits                    
-                    def commitCount = bat(                        
-                        script: 'git rev-list --count HEAD',                        
+                    // Obtiene el número total de commits
+                    def commitCount = powershell(
+                        script: 'git rev-list --count HEAD',
                         returnStdout: true
                     ).trim()
-        
+
                     // Construye la nueva versión
                     def newVersion = "1.0.${commitCount}"
                     
                     echo "Nueva versión configurada: ${newVersion}"
-        
+
                     // Escapa correctamente las comillas y las rutas
-                    bat """
-                    powershell -Command "(Get-Content '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json') -replace '\\\"projectVersion\\\": \".*\\\",', '\\\"projectVersion\\\": \"${newVersion}\",' | Set-Content '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json'"
+                    def updateVersionCommand = """
+                    \$projectPath = '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json'
+                    (Get-Content \$projectPath) -replace '\\\"projectVersion\\\": \".*\\\",', '\\\"projectVersion\\\": \\\"${newVersion}\\\",' | Set-Content \$projectPath
                     """
-        
+
+                    // Ejecutar el comando de PowerShell
+                    powershell script: updateVersionCommand, returnStdout: true
+
                     echo "Nueva versión configurada: ${newVersion}"
-        
+
                     // Asigna la nueva versión como variable de entorno para las siguientes etapas
                     env.PACKAGE_VERSION = newVersion
                 }
             }
         }
+
 
         stage('Empaquetar proyecto UiPath') {
             steps {
