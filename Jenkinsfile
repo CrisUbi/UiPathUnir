@@ -9,10 +9,10 @@ pipeline {
         }
         stage('Get Commit Message') {
             steps {
-                // Usa el comando git para obtener el mensaje del último commit
+                // Usa el comando git para obtener el mensaje del último commit en Windows
                 script {
-                    def commitMessage = sh(
-                        script: "git log -1 --pretty=%B",
+                    def commitMessage = bat(
+                        script: "git log -1 --pretty=%%B",
                         returnStdout: true
                     ).trim()
                     echo "Último mensaje de commit: ${commitMessage}"
