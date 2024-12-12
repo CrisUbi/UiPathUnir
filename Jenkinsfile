@@ -105,7 +105,7 @@ pipeline {
                     bat """
                     "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
                     """
-                    def directoryPath = ${OUTPUT_PATH}  // Cambia esto por la ruta del directorio donde esperas el archivo
+                    def directoryPath = "${OUTPUT_PATH}"  // Cambia esto por la ruta del directorio donde esperas el archivo
                     def fileExists = false
                     def maxAttempts = 10  // Número máximo de intentos
                     def attempt = 0
