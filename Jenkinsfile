@@ -1,26 +1,17 @@
 pipeline {
     agent any
     stages {
-        stage('Get Commit Message and Repo URL') {
+        stage('Get Commit Message') {
             steps {
                 script {
-                    // Obtener solo el mensaje del último commit sin metadatos
+                    // Usar git log para obtener solo el mensaje del commit
                     def commitMessage = bat(
-                        script: 'git log -1 --pretty=%B',
+                        script: 'git log -1 --abbrev-commit --no-merges --pretty=%s',
                         returnStdout: true
                     ).trim()
  
-                    // Imprimir el mensaje del commit
+                    // Imprimir solo el mensaje del commit
                     echo "Último mensaje de commit: ${commitMessage}"
-
-                    // Obtener la URL del repositorio
-                    def repoUrl = bat(
-                        script: 'git config --get remote.origin.url',
-                        returnStdout: true
-                    ).trim()
-
-                    // Imprimir la URL del repositorio
-                    echo "URL del repositorio: ${repoUrl}"
                 }
             }
         }
