@@ -1,6 +1,6 @@
 trigger:
 - main  # Se ejecuta automáticamente con cada commit en la rama principal.
-
+prueba
 pool:
   vmImage: 'windows-latest'
 
