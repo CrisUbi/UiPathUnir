@@ -55,6 +55,14 @@ pipeline {
             }
         }
         
+        stage('Analizar codigo') {
+            steps {
+                bat """
+                "${UIPCLI_PATH}" package analyze "${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json" --analyzerTraceLevel "Verbose" --resultPath "${OUTPUT_PATH}\Workflow-Analysis.json" --treatWarningsAsErrors
+                """
+            }
+        }
+        
         stage('Empaquetar proyecto UiPath') {
             steps {
                 script {
