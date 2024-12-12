@@ -105,12 +105,34 @@ pipeline {
                     bat """
                     "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
                     """
-                    sleep(time: 30, unit: 'SECONDS')
+                    def directoryPath = ${OUTPUT_PATH}  // Cambia esto por la ruta del directorio donde esperas el archivo
+                    def fileExists = false
+                    def maxAttempts = 10  // Número máximo de intentos
+                    def attempt = 0
+                    def waitTime = 10  // Tiempo de espera entre intentos en segundos
+ 
+                    while (!fileExists && attempt < maxAttempts) {
+                        def files = findFiles(glob: "${directoryPath}/*.nupkg")
+ 
+                        if (files.length > 0) {
+                            fileExists = true
+                            echo "Archivo .nupkg encontrado: ${files[0].path}"
+                        } else {
+                            attempt++
+                            echo "Intento ${attempt}: Esperando ${waitTime} segundos..."
+                            sleep(time: waitTime, unit: 'SECONDS')
+                        }
+                    }
+ 
+                    if (!fileExists) {
+                        error "No se encontró ningún archivo .nupkg después de ${maxAttempts} intentos."
+                    }
                     PACKAGE_NAME = powershell( script: "Get-ChildItem -Path ${OUTPUT_PATH} -Filter '*.nupkg' | Select-Object -ExpandProperty Name", returnStdout: true ).trim()
                     echo ${PACKAGE_NAME}
-                }
             }
         }
+    }
+
 
         stage('Desplegar en Orchestrator') {
             steps {
