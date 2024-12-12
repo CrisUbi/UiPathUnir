@@ -24,7 +24,7 @@ pipeline {
 
                     def commitMessage = bat(
 
-                        script: 'git log -1 --pretty=format:"%%B"',
+                        script: 'git log -1 --pretty=format:%%B',
 
                         returnStdout: true
 
