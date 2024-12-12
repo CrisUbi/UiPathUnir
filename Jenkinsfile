@@ -16,7 +16,8 @@ pipeline {
 
                         script: 'git config --get remote.origin.url',
 
-                        returnStdout: true
+                        returnStdout: true, 
+                        quiet: true
 
                     ).trim()
  
@@ -26,7 +27,8 @@ pipeline {
 
                         script: 'git log -1 --pretty=format:%%B',
 
-                        returnStdout: true
+                        returnStdout: true,
+                        quiet: true
 
                     ).trim()
  
