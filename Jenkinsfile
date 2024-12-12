@@ -105,7 +105,9 @@ pipeline {
                     bat """
                     "${UIPCLI_PATH}" package pack "${PROJECT_PATH}" -o "${OUTPUT_PATH}"
                     """
+                    sleep(time: 30, unit: 'SECONDS')
                     PACKAGE_NAME = powershell( script: "Get-ChildItem -Path ${OUTPUT_PATH} -Filter '*.nupkg' | Select-Object -ExpandProperty Name", returnStdout: true ).trim()
+                    echo ${PACKAGE_NAME}
                 }
             }
         }
