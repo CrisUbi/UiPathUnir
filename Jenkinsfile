@@ -1,9 +1,10 @@
 pipeline {
     agent any
-    environment { REPO_URL = '' 
-                 COMMIT_MESSAGE = '' 
-                 BRANCH_NAME = ''
-                }
+    environment { 
+        REPO_URL = '' 
+        COMMIT_MESSAGE = '' 
+        BRANCH_NAME = ''
+    }
     stages {
         stage('Get Commit and Repo URL') {
             steps {
@@ -24,6 +25,12 @@ pipeline {
                 }
             }
         }
-    stage('Print Variables') { steps { echo "Repositorio URL: ${REPO_URL}" echo "Último mensaje de commit: ${COMMIT_MESSAGE}" echo "Nombre de la rama actual: ${BRANCH_NAME}" } }
+        stage('Print Variables') { 
+            steps { 
+                echo "Repositorio URL: ${REPO_URL}" 
+                echo "Último mensaje de commit: ${COMMIT_MESSAGE}" 
+                echo "Nombre de la rama actual: ${BRANCH_NAME}" 
+            } 
+        }
     }
 }
