@@ -20,9 +20,10 @@ pipeline {
         stage('Clonar repositorio') {
 
             steps {
+                bat """
 
                 git branch: "%BRANCH_NAME%", url: "%GITHUB_URL%"
-
+                """
             }
 
         }
