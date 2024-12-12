@@ -30,8 +30,8 @@ pipeline {
                         // Separar el texto por '#'
                     def parts = COMMIT_MESSAGE.split("#", 2) // Limitar a 2 partes
                         // Asignar a variables antes y después del '#'
-                    FOLDER_NAME = parts[0]
-                    PROJECT_NAME = parts.length > 1 ? parts[1] : "${FOLDER_NAME}"
+                    UI_FOLDER = parts[0]
+                    PROJECT_NAME = parts.length > 1 ? parts[1] : "${UI_FOLDER}"
                     
                     // Obtener la rama que contiene el commit 
                     def commitHash = powershell( script: 'git rev-parse HEAD', returnStdout: true ).trim() 
@@ -80,7 +80,7 @@ pipeline {
                 echo "Repositorio URL: ${GITHUB_URL}" 
                 echo "Último mensaje de commit: ${COMMIT_MESSAGE}" 
                 echo "Nombre de la rama actual: ${BRANCH_NAME}" 
-                echo "Nombre de la rama actual: ${FOLDER_NAME}" 
+                echo "Nombre de la rama actual: ${UI_FOLDER}" 
                 echo "Nombre de la rama actual: ${PROJECT_NAME}" 
             } 
         }
