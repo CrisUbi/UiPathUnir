@@ -63,25 +63,26 @@ pipeline {
                 """
             }
         }
-        
-        stage('Version Management') {             
-            steps { 
-                 script {                     
-                    // Obtiene el número total de commits                     
-                    def commitCount = bat(                         
-                        script: 'git rev-list --count HEAD',                         
-                        returnStdout: true ).trim()                     
-                        // Construye la nueva versión                     
-                        def newVersion = "1.0.${commitCount}"                     
-                        // Actualiza el archivo project.json con la nueva versión                     
-                        bat """                     
-                        powershell -Command "(Get-Content '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json') -replace '\\"projectVersion\\": \\".*\\"', '\\"projectVersion\\": \\"${newVersion}\\"' | Set-Content '${OUTPUT_PATH}\\${PROJECT_NAME}\\project.json'"                     
-                        """                     
-                        echo "Nueva versión configurada: ${newVersion}"                     
-                        // Asigna la nueva versión como variable de entorno para las siguientes etapas                     
-                        PACKAGE_VERSION = newVersion                 
+
+        stage('Version Management') {            
+            steps {
+                 script {                    
+                    // Obtiene el número total de commits                    
+                    def commitCount = bat(                        
+                        script: 'git rev-list --count HEAD',                        
+                        returnStdout: true
+                    ).trim()
+                    // Construye la nueva versión                    
+                    def newVersion = "1.0.${commitCount}"
+                    // Actualiza el archivo project.json con la nueva versión                    
+                    bat """
+                    powershell -Command "(Get-Content '${env.OUTPUT_PATH}\\${env.PROJECT_NAME}\\project.json') -replace '\\\\"projectVersion\\\\": \\\\".*\\\\", '\\\\"projectVersion\\\\": \\\\"${newVersion}\\\\",' | Set-Content '${env.OUTPUT_PATH}\\${env.PROJECT_NAME}\\project.json'"
+                    """
+                    echo "Nueva versión configurada: ${newVersion}"
+                    // Asigna la nueva versión como variable de entorno para las siguientes etapas                    
+                    env.PACKAGE_VERSION = newVersion
                 }
-            } 
+            }
         }
 
         stage('Empaquetar proyecto UiPath') {
