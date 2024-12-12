@@ -3,7 +3,6 @@ pipeline {
     stages {
         stage('Get Commit and Repo URL') {
             steps {
-                // Obtiene la URL del repositorio y el último mensaje del commit
                 script {
                     // Obtener la URL del repositorio
                     def repoUrl = bat(
@@ -13,7 +12,7 @@ pipeline {
  
                     // Obtener el mensaje del último commit
                     def commitMessage = bat(
-                        script: 'git log -1 --pretty=%B',
+                        script: 'git log -1 --pretty=format:"%B"',
                         returnStdout: true
                     ).trim()
  
